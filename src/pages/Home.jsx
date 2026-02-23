@@ -435,7 +435,7 @@ export default function Home() {
                   {t.commonLabel}
                 </p>
                 <div className="flex flex-wrap gap-2" role="list" aria-label={t.commonLabel}>
-                  {getAllMedicineNames().map((name) => (
+                  {getAllMedicineNames().slice(0, 5).map((name) => (
                     <motion.button
                       key={name}
                       role="listitem"
