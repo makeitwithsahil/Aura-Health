@@ -175,7 +175,7 @@ export default function MedicineSearch() {
   const enData  = medData?.en || medData; // use .en if present, else top-level
 
   return (
-    <section id="search" aria-label="Medicine search" className="w-full max-w-2xl mx-auto">
+    <section id="search" aria-label="Medicine search" className="w-full max-w-5xl mx-auto">
       <AnimatePresence mode="wait">
 
         {/* ═══════════════════════════════ SEARCH STATE ══════════════════════ */}
@@ -187,6 +187,8 @@ export default function MedicineSearch() {
             animate="visible"
             exit={{ opacity: 0, y: -12, transition: { duration: 0.25 } }}
           >
+            {/* Search bar — constrained width, centered */}
+            <div className="max-w-2xl mx-auto">
             {/* Search bar with live dropdown */}
             <div className="relative" ref={dropRef} role="search">
               <div className="flex gap-3">
@@ -329,6 +331,7 @@ export default function MedicineSearch() {
                 ))}
               </div>
             </div>
+            </div>{/* end centered container */}
           </motion.div>
 
         ) : (
@@ -377,140 +380,142 @@ export default function MedicineSearch() {
               </button>
             </motion.div>
 
-            {/* Medicine header card */}
+            {/* Medicine header card — full width */}
             <motion.div variants={staggerItem}>
-              <Card className="p-6 mb-4">
-                {/* Category badge */}
-                <span
-                  className="inline-block text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-full mb-3 border"
-                  style={{
-                    background: GREEN_BG,
-                    color: GREEN_DARK,
-                    borderColor: GREEN_BORDER,
-                  }}
-                >
-                  {enData?.category}
-                </span>
+              <Card className="p-6 mb-4 lg:flex lg:items-center lg:gap-8">
+                <div className="lg:flex-1">
+                  {/* Category badge */}
+                  <span
+                    className="inline-block text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-full mb-3 border"
+                    style={{
+                      background: GREEN_BG,
+                      color: GREEN_DARK,
+                      borderColor: GREEN_BORDER,
+                    }}
+                  >
+                    {enData?.category}
+                  </span>
 
-                {/* ── HEADING: what the user actually searched ── */}
-                <h2 className="text-2xl font-bold text-white tracking-tight mb-0.5">
-                  {result.searchedTerm}
-                </h2>
+                  <h2 className="text-2xl lg:text-4xl font-bold text-white tracking-tight mb-0.5">
+                    {result.searchedTerm}
+                  </h2>
 
-                {/* If alias — show generic name in green */}
-                {result.isAlias && (
-                  <p className="text-sm font-semibold mb-1" style={{ color: GREEN }}>
-                    Generic: {medData.name}
-                  </p>
-                )}
+                  {result.isAlias && (
+                    <p className="text-sm font-semibold mb-1" style={{ color: GREEN }}>
+                      Generic: {medData.name}
+                    </p>
+                  )}
 
-                {/* Brand list */}
-                <p className="text-xs text-slate-500 mb-4 font-medium">{medData.brand}</p>
+                  <p className="text-xs text-slate-500 mb-0 font-medium">{medData.brand}</p>
+                </div>
 
-                {/* Description */}
-                <p className="text-slate-300 text-sm leading-relaxed">
+                <p className="text-slate-300 text-sm leading-relaxed mt-4 lg:mt-0 lg:max-w-xs lg:border-l lg:border-white/10 lg:pl-8">
                   {enData?.description}
                 </p>
               </Card>
             </motion.div>
 
-            {/* Uses */}
-            <motion.div variants={staggerItem}>
-              <Card className="p-5 mb-4">
-                <h3 className="text-sm font-semibold text-slate-300 flex items-center gap-2 mb-4">
-                  <RiCapsuleLine size={16} style={{ color: GREEN }} />
-                  Common Uses
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {(enData?.uses || []).map((use) => (
-                    <span
-                      key={use}
-                      className="text-xs px-3 py-1.5 rounded-lg font-medium border"
+            {/* Two-column grid for Uses + Dosage on laptop */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+
+              {/* Uses */}
+              <motion.div variants={staggerItem}>
+                <Card className="p-5 h-full">
+                  <h3 className="text-sm font-semibold text-slate-300 flex items-center gap-2 mb-4">
+                    <RiCapsuleLine size={16} style={{ color: GREEN }} />
+                    Common Uses
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {(enData?.uses || []).map((use) => (
+                      <span
+                        key={use}
+                        className="text-xs px-3 py-1.5 rounded-lg font-medium border"
+                        style={{
+                          background: "rgba(30,227,148,0.07)",
+                          color: "#6ee7b7",
+                          borderColor: "rgba(30,227,148,0.15)",
+                        }}
+                      >
+                        {use}
+                      </span>
+                    ))}
+                  </div>
+                </Card>
+              </motion.div>
+
+              {/* Dosage */}
+              <motion.div variants={staggerItem}>
+                <Card className="p-5 h-full">
+                  <h3 className="text-sm font-semibold text-slate-300 flex items-center gap-2 mb-4">
+                    <RiShieldCheckLine size={16} style={{ color: GREEN }} />
+                    Dosage by Age Group
+                  </h3>
+
+                  {/* Age tabs */}
+                  <div className="flex gap-2 mb-4" role="tablist" aria-label="Age group dosage">
+                    {AGE_TABS.map(({ key, label, Icon }) => (
+                      <button
+                        key={key}
+                        role="tab"
+                        aria-selected={activeAge === key}
+                        onClick={() => { setActiveAge(key); stopSpeech(); }}
+                        className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg transition-all duration-200 flex-1 justify-center border"
+                        style={
+                          activeAge === key
+                            ? {
+                                backgroundColor: GREEN,
+                                color: "#0a3d28",
+                                borderColor: GREEN,
+                                boxShadow: `0 2px 10px rgba(30,227,148,0.28)`,
+                              }
+                            : {
+                                background: "rgba(255,255,255,0.05)",
+                                color: "#64748b",
+                                borderColor: "rgba(255,255,255,0.05)",
+                              }
+                        }
+                      >
+                        <Icon size={13} />
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeAge}
+                      role="tabpanel"
+                      aria-label={`${activeAge} dosage`}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: 0.2 }}
+                      className="rounded-xl p-4 text-sm text-slate-300 leading-relaxed border"
                       style={{
-                        background: "rgba(30,227,148,0.07)",
-                        color: "#6ee7b7",
+                        background: "rgba(30,227,148,0.06)",
                         borderColor: "rgba(30,227,148,0.15)",
                       }}
                     >
-                      {use}
-                    </span>
-                  ))}
-                </div>
-              </Card>
-            </motion.div>
+                      {enData?.dosage?.[activeAge]}
+                    </motion.div>
+                  </AnimatePresence>
 
-            {/* Dosage */}
-            <motion.div variants={staggerItem}>
-              <Card className="p-5 mb-4">
-                <h3 className="text-sm font-semibold text-slate-300 flex items-center gap-2 mb-4">
-                  <RiShieldCheckLine size={16} style={{ color: GREEN }} />
-                  Dosage by Age Group
-                </h3>
+                  <p className="mt-3 text-xs text-slate-600 italic">
+                    Always follow your healthcare provider&rsquo;s specific instructions.
+                  </p>
+                </Card>
+              </motion.div>
 
-                {/* Age tabs */}
-                <div className="flex gap-2 mb-4" role="tablist" aria-label="Age group dosage">
-                  {AGE_TABS.map(({ key, label, Icon }) => (
-                    <button
-                      key={key}
-                      role="tab"
-                      aria-selected={activeAge === key}
-                      onClick={() => { setActiveAge(key); stopSpeech(); }}
-                      className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg transition-all duration-200 flex-1 justify-center border"
-                      style={
-                        activeAge === key
-                          ? {
-                              backgroundColor: GREEN,
-                              color: "#0a3d28",
-                              borderColor: GREEN,
-                              boxShadow: `0 2px 10px rgba(30,227,148,0.28)`,
-                            }
-                          : {
-                              background: "rgba(255,255,255,0.05)",
-                              color: "#64748b",
-                              borderColor: "rgba(255,255,255,0.05)",
-                            }
-                      }
-                    >
-                      <Icon size={13} />
-                      {label}
-                    </button>
-                  ))}
-                </div>
+            </div>{/* end uses+dosage grid */}
 
-                {/* Dosage text */}
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeAge}
-                    role="tabpanel"
-                    aria-label={`${activeAge} dosage`}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2 }}
-                    className="rounded-xl p-4 text-sm text-slate-300 leading-relaxed border"
-                    style={{
-                      background: "rgba(30,227,148,0.06)",
-                      borderColor: "rgba(30,227,148,0.15)",
-                    }}
-                  >
-                    {enData?.dosage?.[activeAge]}
-                  </motion.div>
-                </AnimatePresence>
-
-                <p className="mt-3 text-xs text-slate-600 italic">
-                  Always follow your healthcare provider&rsquo;s specific instructions.
-                </p>
-              </Card>
-            </motion.div>
-
-            {/* Warnings */}
+            {/* Warnings — full width with 2-col list on laptop */}
             <motion.div variants={staggerItem}>
               <Card className="p-5 bg-red-950/10 border-red-900/20">
                 <h3 className="text-sm font-semibold text-red-400 flex items-center gap-2 mb-4">
                   <RiAlertLine size={16} />
                   Important Warnings
                 </h3>
-                <ul className="space-y-3" role="list">
+                <ul className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-3" role="list">
                   {(enData?.warnings || []).map((warning, i) => (
                     <li
                       key={i}

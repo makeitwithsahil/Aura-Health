@@ -1,26 +1,29 @@
-// components/layout/Footer.jsx
+// components/layout/Footer.jsx — light green theme matching Home.jsx
 
 import { RiHeartPulseLine, RiGithubLine } from "react-icons/ri";
+
+const GREEN = "#1ee394";
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer
-      role="contentinfo"
-      className="border-t border-white/5 mt-24"
-    >
-      <div className="mx-auto max-w-6xl px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-        
+    <footer role="contentinfo" className="py-10 px-4">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Brand */}
-        <div className="flex items-center gap-2 text-slate-500">
-          <RiHeartPulseLine size={16} className="text-blue-500" />
-          <span className="text-sm font-semibold text-slate-400">ExplainMyMed</span>
-          <span className="text-xs">&copy; {year}</span>
-        </div>
+        <a href="/" className="flex items-center gap-2.5 group">
+          <span
+            className="w-9 h-9 rounded-lg flex items-center justify-center shadow transition-opacity group-hover:opacity-80"
+            style={{ backgroundColor: GREEN }}
+          >
+            <RiHeartPulseLine size={17} className="text-white" />
+          </span>
+          <span className="text-base font-bold text-slate-600">Aura Health</span>
+          <span className="text-sm text-slate-400">&copy; {year}</span>
+        </a>
 
         {/* Disclaimer */}
-        <p className="text-xs text-slate-600 text-center max-w-sm leading-relaxed">
+        <p className="text-sm text-slate-400 text-center max-w-sm leading-relaxed">
           For informational purposes only. Always consult a qualified healthcare
           professional before taking any medicine.
         </p>
@@ -28,13 +31,13 @@ export default function Footer() {
         {/* Links */}
         <div className="flex items-center gap-4">
           <a
-            href="https://github.com"
+            href="https://github.com/makeitwithsahil/Aura-Health"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="View source on GitHub"
-            className="text-slate-600 hover:text-slate-300 transition-colors duration-200"
+            className="text-slate-400 hover:text-slate-600 transition-colors duration-200"
           >
-            <RiGithubLine size={18} />
+            <RiGithubLine size={22} />
           </a>
         </div>
       </div>
