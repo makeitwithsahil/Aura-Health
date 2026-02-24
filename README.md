@@ -42,7 +42,6 @@ Every result includes:
 | `/` | **Home** | Medicine search with live suggestions, results, audio, and dosage tabs |
 | `/symptoms` | **Symptom Checker** | Enter symptoms → get OTC medicine recommendations |
 | `/about` | **About** | Project background, problem statement, feature overview, and hackathon scope |
-| `/team` | **Team** | Meet the people who built Aura Health |
 | `/contact` | **Contact** | Email, WhatsApp, location, and social links |
 
 ---
@@ -102,7 +101,6 @@ src/
 │   ├── Home.jsx          # Medicine search + results
 │   ├── Symptoms.jsx      # Symptom checker
 │   ├── About.jsx         # About page
-│   ├── Team.jsx          # Team page
 │   └── Contact.jsx       # Contact page
 ├── services/
 │   ├── searchService.js  # Medicine lookup + autocomplete logic
