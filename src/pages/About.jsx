@@ -4,11 +4,11 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import {
-  RiCapsuleLine, RiVolumeUpLine, RiUser3Line,
+  RiCapsuleLine, RiVolumeUpLine,
   RiSearchLine, RiBookOpenLine, RiShieldCheckLine,
   RiCheckLine, RiHeartPulseLine, RiFlashlightLine,
   RiTimeLine, RiAlertLine, RiSparklingLine,
-  RiStethoscopeLine, RiParentLine, RiUserLine,
+  RiStethoscopeLine, RiParentLine,
 } from "react-icons/ri";
 
 // ─── Theme — exact match to Home.jsx ──────────────────────────────────────────
@@ -19,7 +19,7 @@ const GREEN_BORDER = "rgba(30,227,148,0.35)";
 
 // Glass styles — same as Home.jsx
 const glass = "bg-white/70 backdrop-blur-2xl border border-white/90 shadow-sm";
-const glassMedium = "bg-white/55 backdrop-blur-xl border border-white/75 shadow-sm";
+
 
 // ─── Content ──────────────────────────────────────────────────────────────────
 const content = {
@@ -235,17 +235,8 @@ export default function About({ lang = "en" }) {
   const t = content[lang] || content.en;
 
   return (
-    <div
-      className="min-h-screen flex flex-col text-slate-800"
-      style={{
-        background:
-          "radial-gradient(ellipse 75% 55% at 5% -5%,  rgba(30,227,148,0.18) 0%, transparent 55%)," +
-          "radial-gradient(ellipse 55% 40% at 95% 5%,  rgba(30,227,148,0.12) 0%, transparent 50%)," +
-          "radial-gradient(ellipse 65% 45% at 50% 105%, rgba(30,227,148,0.14) 0%, transparent 55%)," +
-          "#f0fdf8",
-      }}
-    >
-      <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 pt-28 pb-24 space-y-28">
+    <>
+      <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 pt-28 pb-24 space-y-28">
 
         {/* ── HERO ── */}
         <FadeIn className="text-center">
@@ -486,7 +477,7 @@ export default function About({ lang = "en" }) {
           </div>
         </FadeIn>
 
-      </main>
-    </div>
+      </div>
+    </>
   );
 }

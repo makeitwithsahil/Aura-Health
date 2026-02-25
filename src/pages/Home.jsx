@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   RiSearchLine,
@@ -125,8 +125,7 @@ const GREEN_BORDER = "rgba(30,227,148,0.35)";
 
 // Glass styles — two levels of depth
 const glass = "bg-white/70 backdrop-blur-2xl border border-white/90 shadow-sm";
-const glassMedium = "bg-white/55 backdrop-blur-xl border border-white/75 shadow-sm";
-const glassDeep = "bg-white/40 backdrop-blur-xl border border-white/60";
+
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function Home({ lang = "en" }) {
