@@ -1,6 +1,7 @@
 // components/layout/Navbar.jsx — minimal premium navbar
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   RiHeartPulseLine,
@@ -9,33 +10,33 @@ import {
   RiTranslate2,
 } from "react-icons/ri";
 
-const GREEN        = "#1ee394";
-const GREEN_DARK   = "#0d9e66";
-const GREEN_BG     = "rgba(30,227,148,0.10)";
+const GREEN = "#1ee394";
+const GREEN_DARK = "#0d9e66";
+const GREEN_BG = "rgba(30,227,148,0.10)";
 const GREEN_BORDER = "rgba(30,227,148,0.30)";
 
 const NAV_LINKS = [
-  { href: "/",         label: { en: "Search",   hi: "खोजें",       gu: "શોધો"    } },
-  { href: "/symptoms", label: { en: "Symptoms", hi: "लक्षण",        gu: "લક્ષણ"   } },
-  { href: "/about",    label: { en: "About",    hi: "जानकारी",      gu: "માહિતી"  } },
-  { href: "/contact",  label: { en: "Contact",  hi: "संपर्क",        gu: "સંપર્ક"  } },
+  { href: "/", label: { en: "Search", hi: "खोजें", gu: "શોધો" } },
+  { href: "/symptoms", label: { en: "Symptoms", hi: "लक्षण", gu: "લક્ષણ" } },
+  { href: "/about", label: { en: "About", hi: "जानकारी", gu: "માહિતી" } },
+  { href: "/contact", label: { en: "Contact", hi: "संपर्क", gu: "સંપર્ક" } },
 ];
 
 const LANGUAGES = [
-  { code: "en", label: "English",  short: "EN" },
-  { code: "hi", label: "हिंदी",   short: "हि" },
+  { code: "en", label: "English", short: "EN" },
+  { code: "hi", label: "हिंदी", short: "हि" },
   { code: "gu", label: "ગુજરાતી", short: "ગુ" },
 ];
 
-export default function Navbar({ lang: langProp = "en", onLangChange }) {
+export default memo(function Navbar({ lang: langProp = "en", onLangChange }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [langOpen,   setLangOpen]   = useState(false);
-  const [scrolled,   setScrolled]   = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   // Internal lang state — syncs with prop but works standalone too
   const [lang, setLang] = useState(langProp);
   const langRef = useRef(null);
 
-  const current = typeof window !== "undefined" ? window.location.pathname : "/";
+  const { pathname: current } = useLocation();
 
   // Keep internal state in sync if parent changes prop externally
   useEffect(() => { setLang(langProp); }, [langProp]);
@@ -91,7 +92,7 @@ export default function Navbar({ lang: langProp = "en", onLangChange }) {
           }}
         >
           {/* Logo */}
-          <a href="/" aria-label="Aura Health home" className="flex items-center gap-2.5 flex-shrink-0 focus:outline-none group">
+          <Link to="/" aria-label="Aura Health home" className="flex items-center gap-2.5 flex-shrink-0 focus:outline-none group">
             <motion.span
               whileHover={{ scale: 1.1, rotate: -6 }}
               whileTap={{ scale: 0.92 }}
@@ -110,16 +111,16 @@ export default function Navbar({ lang: langProp = "en", onLangChange }) {
             >
               Aura Health
             </span>
-          </a>
+          </Link>
 
           {/* Desktop links */}
           <nav aria-label="Primary" className="hidden md:flex items-center gap-0.5">
             {NAV_LINKS.map(({ href, label }) => {
               const isActive = current === href;
               return (
-                <a
+                <Link
                   key={href}
-                  href={href}
+                  to={href}
                   aria-current={isActive ? "page" : undefined}
                   className="relative px-4 py-2 rounded-xl text-[14px] font-semibold transition-all duration-200 focus:outline-none"
                   style={{
@@ -141,7 +142,7 @@ export default function Navbar({ lang: langProp = "en", onLangChange }) {
                   }}
                 >
                   {label[lang] || label.en}
-                </a>
+                </Link>
               );
             })}
           </nav>
@@ -276,8 +277,8 @@ export default function Navbar({ lang: langProp = "en", onLangChange }) {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.04, duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
                       >
-                        <a
-                          href={href}
+                        <Link
+                          to={href}
                           aria-current={isActive ? "page" : undefined}
                           onClick={() => setMobileOpen(false)}
                           className="flex items-center px-4 py-3 rounded-xl text-[15px] font-semibold transition-all duration-150"
@@ -288,7 +289,7 @@ export default function Navbar({ lang: langProp = "en", onLangChange }) {
                           }}
                         >
                           {label[lang] || label.en}
-                        </a>
+                        </Link>
                       </motion.li>
                     );
                   })}
@@ -322,4 +323,4 @@ export default function Navbar({ lang: langProp = "en", onLangChange }) {
       </motion.div>
     </header>
   );
-}
+});

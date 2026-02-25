@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   RiSearchLine,
@@ -24,16 +24,16 @@ import { speakText, buildMedicineScript } from "../services/speechService";
 
 // ─── Language config ───────────────────────────────────────────────────────────
 const LANGUAGES = [
-  { code: "en", label: "English",  short: "EN" },
-  { code: "hi", label: "हिंदी",    short: "हि" },
+  { code: "en", label: "English", short: "EN" },
+  { code: "hi", label: "हिंदी", short: "हि" },
   { code: "gu", label: "ગુજરાતી", short: "ગુ" },
 ];
 
 const NAV_LINKS = [
   { href: "/symptoms", label: { en: "Symptom Checker", hi: "लक्षण जांचें", gu: "લક્ષણ તપાસો" } },
-  { href: "/team",     label: { en: "Team",            hi: "टीम",           gu: "ટીમ"         } },
-  { href: "/about",    label: { en: "About",           hi: "जानकारी",       gu: "માહિતી"      } },
-  { href: "/contact",  label: { en: "Contact",         hi: "संपर्क",         gu: "સંપર્ક"      } },
+  { href: "/team", label: { en: "Team", hi: "टीम", gu: "ટીમ" } },
+  { href: "/about", label: { en: "About", hi: "जानकारी", gu: "માહિતી" } },
+  { href: "/contact", label: { en: "Contact", hi: "संपर्क", gu: "સંપર્ક" } },
 ];
 
 const UI = {
@@ -118,42 +118,42 @@ const cardAnim = {
 const AGE_ICONS = { children: RiParentLine, adults: RiUserLine, elderly: RiUser3Line };
 
 // ─── Theme constants ──────────────────────────────────────────────────────────
-const GREEN        = "#1ee394";
-const GREEN_DIM    = "#17c97e";
-const GREEN_BG     = "rgba(30,227,148,0.12)";
+const GREEN = "#1ee394";
+const GREEN_DIM = "#17c97e";
+const GREEN_BG = "rgba(30,227,148,0.12)";
 const GREEN_BORDER = "rgba(30,227,148,0.35)";
 
 // Glass styles — two levels of depth
-const glass      = "bg-white/70 backdrop-blur-2xl border border-white/90 shadow-sm";
+const glass = "bg-white/70 backdrop-blur-2xl border border-white/90 shadow-sm";
 const glassMedium = "bg-white/55 backdrop-blur-xl border border-white/75 shadow-sm";
-const glassDeep  = "bg-white/40 backdrop-blur-xl border border-white/60";
+const glassDeep = "bg-white/40 backdrop-blur-xl border border-white/60";
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function Home({ lang = "en" }) {
-  const [query, setQuery]               = useState("");
-  const [result, setResult]             = useState(null);
+  const [query, setQuery] = useState("");
+  const [result, setResult] = useState(null);
   const [searchedTerm, setSearchedTerm] = useState("");
-  const [notFound, setNotFound]         = useState(false);
-  const [activeAge, setActiveAge]       = useState("adults");
-  const [speaking, setSpeaking]         = useState(false);
-  const [langOpen, setLangOpen]         = useState(false);
-  const [mobileOpen, setMobileOpen]     = useState(false);
-  const [suggestions, setSuggestions]   = useState([]);
+  const [notFound, setNotFound] = useState(false);
+  const [activeAge, setActiveAge] = useState("adults");
+  const [speaking, setSpeaking] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const cancelRef  = useRef(null);
-  const inputRef   = useRef(null);
+  const cancelRef = useRef(null);
+  const inputRef = useRef(null);
   const suggBoxRef = useRef(null);
   const t = UI[lang];
 
-  const current = "/"; // home is always "/"
 
-  // Live suggestions
+  // Live suggestions — debounced 150 ms so we don't fire on every keystroke
   useEffect(() => {
     if (query.trim().length === 0) { setSuggestions([]); setShowSuggestions(false); return; }
-    const hits = getSuggestions(query, 8);
-    setSuggestions(hits);
-    setShowSuggestions(hits.length > 0);
+    const id = setTimeout(() => {
+      const hits = getSuggestions(query, 8);
+      setSuggestions(hits);
+      setShowSuggestions(hits.length > 0);
+    }, 150);
+    return () => clearTimeout(id);
   }, [query]);
 
   // Close suggestions on outside click
@@ -169,24 +169,26 @@ export default function Home({ lang = "en" }) {
   }, []);
 
   // ── Search logic ─────────────────────────────────────────────────────────────
-  const doSearch = (name = query) => {
+  const stopSpeech = useCallback(() => { cancelRef.current?.(); setSpeaking(false); }, []);
+
+  const doSearch = useCallback((name = query) => {
     const res = getMedicineByName(name);
     setNotFound(false); stopSpeech(); setShowSuggestions(false);
     if (res) { setResult(res.med); setSearchedTerm(res.searchedTerm); setActiveAge("adults"); }
-    else     { setResult(null); setSearchedTerm(""); setNotFound(true); }
-  };
-  const pickSuggestion = (sugg) => { setQuery(sugg.label); setShowSuggestions(false); doSearch(sugg.label); };
-  const handleReset    = () => { setResult(null); setSearchedTerm(""); setNotFound(false); setQuery(""); stopSpeech(); setTimeout(() => inputRef.current?.focus(), 80); };
-  const toggleSpeech   = () => {
+    else { setResult(null); setSearchedTerm(""); setNotFound(true); }
+  }, [query, stopSpeech]);
+
+  const pickSuggestion = useCallback((sugg) => { setQuery(sugg.label); setShowSuggestions(false); doSearch(sugg.label); }, [doSearch]);
+  const handleReset = useCallback(() => { setResult(null); setSearchedTerm(""); setNotFound(false); setQuery(""); stopSpeech(); setTimeout(() => inputRef.current?.focus(), 80); }, [stopSpeech]);
+  const toggleSpeech = useCallback(() => {
     if (speaking) { stopSpeech(); return; }
     const script = buildMedicineScript(result, activeAge, lang);
     const { cancel } = speakText(script, lang, { onEnd: () => setSpeaking(false) });
     cancelRef.current = cancel; setSpeaking(true);
-  };
-  const stopSpeech  = () => { cancelRef.current?.(); setSpeaking(false); };
-  const switchLang  = (code) => { setLang(code); setLangOpen(false); setMobileOpen(false); stopSpeech(); };
-  const ageLabel    = (age) => age === "children" ? t.ageChildren : age === "adults" ? t.ageAdults : t.ageElderly;
-  const isAlias     = result && searchedTerm && searchedTerm.toLowerCase() !== result.name.toLowerCase();
+  }, [speaking, stopSpeech, result, activeAge, lang]);
+
+  const ageLabel = useCallback((age) => age === "children" ? t.ageChildren : age === "adults" ? t.ageAdults : t.ageElderly, [t]);
+  const isAlias = result && searchedTerm && searchedTerm.toLowerCase() !== result.name.toLowerCase();
 
   // ── Render ────────────────────────────────────────────────────────────────────
   return (
@@ -411,9 +413,9 @@ export default function Home({ lang = "en" }) {
                   {/* Three mini feature tiles */}
                   <div className="grid grid-cols-3 gap-3">
                     {[
-                      { icon: RiShieldCheckLine, label: "Safe\nDosage"    },
-                      { icon: RiCapsuleLine,     label: "OTC\nGuidance"   },
-                      { icon: RiHeartPulseLine,  label: "Symptom\nChecker" },
+                      { icon: RiShieldCheckLine, label: "Safe\nDosage" },
+                      { icon: RiCapsuleLine, label: "OTC\nGuidance" },
+                      { icon: RiHeartPulseLine, label: "Symptom\nChecker" },
                     ].map(({ icon: Icon, label }) => (
                       <div
                         key={label}
@@ -472,15 +474,14 @@ export default function Home({ lang = "en" }) {
                   whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
                   onClick={toggleSpeech}
                   aria-label={speaking ? t.stopBtn : t.listenBtn}
-                  className={`flex items-center gap-2 text-base font-bold px-6 py-3.5 rounded-xl transition-all duration-200 focus:outline-none shadow-sm ${
-                    speaking
-                      ? "bg-red-500 hover:bg-red-400 text-white shadow-red-200"
-                      : `${glass} text-slate-700 hover:bg-white/85`
-                  }`}
+                  className={`flex items-center gap-2 text-base font-bold px-6 py-3.5 rounded-xl transition-all duration-200 focus:outline-none shadow-sm ${speaking
+                    ? "bg-red-500 hover:bg-red-400 text-white shadow-red-200"
+                    : `${glass} text-slate-700 hover:bg-white/85`
+                    }`}
                 >
                   {speaking
                     ? <><RiStopCircleLine size={16} aria-hidden="true" /> {t.stopBtn}</>
-                    : <><RiVolumeUpLine   size={16} aria-hidden="true" /> {t.listenBtn}</>
+                    : <><RiVolumeUpLine size={16} aria-hidden="true" /> {t.listenBtn}</>
                   }
                 </motion.button>
               </motion.div>
@@ -640,14 +641,6 @@ export default function Home({ lang = "en" }) {
         </AnimatePresence>
       </main>
 
-      {/* Overlay to close dropdowns */}
-      {(langOpen || mobileOpen) && (
-        <div
-          className="fixed inset-0 z-30"
-          aria-hidden="true"
-          onClick={() => { setLangOpen(false); setMobileOpen(false); }}
-        />
-      )}
     </div>
   );
 }

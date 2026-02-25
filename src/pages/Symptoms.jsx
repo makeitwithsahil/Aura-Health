@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useMemo, memo } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import {
   RiStethoscopeLine, RiCapsuleLine, RiShieldCheckLine,
   RiAlertLine, RiSearchEyeLine, RiCloseLine, RiInformationLine,
@@ -11,16 +12,16 @@ import {
 import { medicines } from "../data/medicines";
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
-const G           = "#1ee394";
-const G_DIM       = "#17c97e";
-const G_BG        = "rgba(30,227,148,0.08)";
-const G_HOVER     = "rgba(30,227,148,0.14)";
-const G_BORDER    = "rgba(30,227,148,0.30)";
-const G_DARK      = "#0b9460";
-const G_TEXT      = "#054d34";
+const G = "#1ee394";
+const G_DIM = "#17c97e";
+const G_BG = "rgba(30,227,148,0.08)";
+const G_HOVER = "rgba(30,227,148,0.14)";
+const G_BORDER = "rgba(30,227,148,0.30)";
+const G_DARK = "#0b9460";
+const G_TEXT = "#054d34";
 const BORDER_SOFT = "rgba(209,242,225,0.85)";
-const CARD_BG     = "#ffffff";
-const INNER_BG    = "rgba(248,254,251,1)";
+const CARD_BG = "#ffffff";
+const INNER_BG = "rgba(248,254,251,1)";
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 const UI = {
@@ -58,8 +59,8 @@ const UI = {
     ageElderly: "Elderly",
     removeTag: (t) => `Remove ${t}`,
     idleHints: [
-      { icon: RiFlashlightLine,  label: "Add your symptoms to get started" },
-      { icon: RiCapsuleLine,     label: "We'll suggest the best OTC medicines" },
+      { icon: RiFlashlightLine, label: "Add your symptoms to get started" },
+      { icon: RiCapsuleLine, label: "We'll suggest the best OTC medicines" },
       { icon: RiShieldCheckLine, label: "See dosage, frequency & warnings" },
     ],
     resultsSubtitle: "Based on your symptoms",
@@ -98,8 +99,8 @@ const UI = {
     ageElderly: "बुजुर्ग",
     removeTag: (t) => `${t} हटाएं`,
     idleHints: [
-      { icon: RiFlashlightLine,  label: "लक्षण जोड़ें और शुरू करें" },
-      { icon: RiCapsuleLine,     label: "हम सही OTC दवाएं सुझाएंगे" },
+      { icon: RiFlashlightLine, label: "लक्षण जोड़ें और शुरू करें" },
+      { icon: RiCapsuleLine, label: "हम सही OTC दवाएं सुझाएंगे" },
       { icon: RiShieldCheckLine, label: "खुराक और सावधानियां तुरंत देखें" },
     ],
     resultsSubtitle: "आपके लक्षणों के आधार पर",
@@ -138,8 +139,8 @@ const UI = {
     ageElderly: "વૃદ્ધ",
     removeTag: (t) => `${t} દૂર કરો`,
     idleHints: [
-      { icon: RiFlashlightLine,  label: "ડાબી બાજુ લક્ષણો ઉમેરો" },
-      { icon: RiCapsuleLine,     label: "OTC દવાઓ સૂચવીશું" },
+      { icon: RiFlashlightLine, label: "ડાબી બાજુ લક્ષણો ઉમેરો" },
+      { icon: RiCapsuleLine, label: "OTC દવાઓ સૂચવીશું" },
       { icon: RiShieldCheckLine, label: "ડોઝ અને સાવધાનીઓ જુઓ" },
     ],
     resultsSubtitle: "તમારા લક્ષણોના આધારે",
@@ -156,37 +157,37 @@ const FREQ = {
 const REASONS = {
   en: {
     paracetamol: { fever: "Reduces body temperature via the brain's heat-regulation centre.", headache: "Blocks pain signals in the brain, relieving headache discomfort.", "body ache": "Reduces generalised pain signals throughout the body.", "body pain": "Reduces generalised pain signals throughout the body.", cold: "Eases fever and aches that accompany cold symptoms.", cough: "Helps with fever and throat discomfort during illness.", pain: "Reduces pain and discomfort effectively.", default: "Reduces pain and fever via the brain's pain-signalling pathways." },
-    ibuprofen:   { fever: "Lowers fever by reducing inflammatory signals in the body.", headache: "Reduces inflammation and pain signals causing headaches.", "body ache": "Anti-inflammatory — reduces muscle and tissue discomfort.", "muscle pain": "Targets inflammation in strained or overused muscles.", default: "Reduces pain and inflammation through anti-inflammatory action." },
-    omeprazole:  { acidity: "Reduces stomach acid production, relieving acidity and heartburn.", heartburn: "Blocks acid secretion in the stomach lining.", default: "Reduces stomach acid to relieve digestive discomfort." },
+    ibuprofen: { fever: "Lowers fever by reducing inflammatory signals in the body.", headache: "Reduces inflammation and pain signals causing headaches.", "body ache": "Anti-inflammatory — reduces muscle and tissue discomfort.", "muscle pain": "Targets inflammation in strained or overused muscles.", default: "Reduces pain and inflammation through anti-inflammatory action." },
+    omeprazole: { acidity: "Reduces stomach acid production, relieving acidity and heartburn.", heartburn: "Blocks acid secretion in the stomach lining.", default: "Reduces stomach acid to relieve digestive discomfort." },
   },
   hi: {
     paracetamol: { बुखार: "शरीर का तापमान कम करता है।", सिरदर्द: "दर्द के संकेतों को अवरुद्ध करता है।", "बदन दर्द": "पूरे शरीर में दर्द कम करता है।", default: "दर्द और बुखार को कम करता है।" },
-    ibuprofen:   { बुखार: "सूजन कम करके बुखार उतारता है।", default: "दर्द और सूजन को कम करता है।" },
-    omeprazole:  { एसिडिटी: "पेट में एसिड उत्पादन कम करता है।", default: "पाचन परेशानी दूर करता है।" },
+    ibuprofen: { बुखार: "सूजन कम करके बुखार उतारता है।", default: "दर्द और सूजन को कम करता है।" },
+    omeprazole: { एसिडिटी: "पेट में एसिड उत्पादन कम करता है।", default: "पाचन परेशानी दूर करता है।" },
   },
   gu: {
     paracetamol: { તાવ: "તાપમાન ઘટાડે છે.", "માથાનો દુખાવો": "દર્દ ઘટાડે છે.", default: "દર્દ અને તાવ ઘટાડે છે." },
-    ibuprofen:   { તાવ: "બળતરા ઘટાડીને તાવ ઉતારે છે.", default: "દર્દ અને બળતરા ઘટાડે છે." },
-    omeprazole:  { એસિડિટી: "એસિડ ઘટાડે છે.", default: "પાચન અગવડ દૂર કરે છે." },
+    ibuprofen: { તાવ: "બળતરા ઘટાડીને તાવ ઉતારે છે.", default: "દર્દ અને બળતરા ઘટાડે છે." },
+    omeprazole: { એસિડિટી: "એસિડ ઘટાડે છે.", default: "પાચન અગવડ દૂર કરે છે." },
   },
 };
 
 const SYM_MAP = {
-  fever:["paracetamol","ibuprofen"], temperature:["paracetamol","ibuprofen"],
-  headache:["paracetamol","ibuprofen"], "head ache":["paracetamol","ibuprofen"], migraine:["paracetamol","ibuprofen"],
-  "body ache":["paracetamol","ibuprofen"], "body pain":["paracetamol","ibuprofen"], pain:["paracetamol","ibuprofen"],
-  cold:["paracetamol"], flu:["paracetamol","ibuprofen"], cough:["paracetamol"], throat:["paracetamol"],
-  "muscle pain":["ibuprofen"], "muscle ache":["ibuprofen"], muscle:["ibuprofen"],
-  "joint pain":["ibuprofen"], joint:["ibuprofen"], inflammation:["ibuprofen"],
-  acidity:["omeprazole"], acid:["omeprazole"], heartburn:["omeprazole"],
-  indigestion:["omeprazole"], stomach:["omeprazole"], "stomach ache":["omeprazole"],
-  gas:["omeprazole"], bloating:["omeprazole"], nausea:["omeprazole"],
-  बुखार:["paracetamol","ibuprofen"], सिरदर्द:["paracetamol","ibuprofen"],
-  "बदन दर्द":["paracetamol","ibuprofen"], सर्दी:["paracetamol"], खांसी:["paracetamol"],
-  "मांसपेशी दर्द":["ibuprofen"], एसिडिटी:["omeprazole"],
-  તાવ:["paracetamol","ibuprofen"], "માથાનો દુખાવો":["paracetamol","ibuprofen"],
-  "શરીરનો દુખાવો":["paracetamol","ibuprofen"], શરદી:["paracetamol"], ઉધરસ:["paracetamol"],
-  "સ્નાયુ દુખાવો":["ibuprofen"], એસિડિટી:["omeprazole"],
+  fever: ["paracetamol", "ibuprofen"], temperature: ["paracetamol", "ibuprofen"],
+  headache: ["paracetamol", "ibuprofen"], "head ache": ["paracetamol", "ibuprofen"], migraine: ["paracetamol", "ibuprofen"],
+  "body ache": ["paracetamol", "ibuprofen"], "body pain": ["paracetamol", "ibuprofen"], pain: ["paracetamol", "ibuprofen"],
+  cold: ["paracetamol"], flu: ["paracetamol", "ibuprofen"], cough: ["paracetamol"], throat: ["paracetamol"],
+  "muscle pain": ["ibuprofen"], "muscle ache": ["ibuprofen"], muscle: ["ibuprofen"],
+  "joint pain": ["ibuprofen"], joint: ["ibuprofen"], inflammation: ["ibuprofen"],
+  acidity: ["omeprazole"], acid: ["omeprazole"], heartburn: ["omeprazole"],
+  indigestion: ["omeprazole"], stomach: ["omeprazole"], "stomach ache": ["omeprazole"],
+  gas: ["omeprazole"], bloating: ["omeprazole"], nausea: ["omeprazole"],
+  बुखार: ["paracetamol", "ibuprofen"], सिरदर्द: ["paracetamol", "ibuprofen"],
+  "बदन दर्द": ["paracetamol", "ibuprofen"], सर्दी: ["paracetamol"], खांसी: ["paracetamol"],
+  "मांसपेशी दर्द": ["ibuprofen"], एसिडिटी: ["omeprazole"],
+  તાવ: ["paracetamol", "ibuprofen"], "માથાનો દુખાવો": ["paracetamol", "ibuprofen"],
+  "શરીરનો દુખાવો": ["paracetamol", "ibuprofen"], શરદી: ["paracetamol"], ઉધરસ: ["paracetamol"],
+  "સ્નાયુ દુખાવો": ["ibuprofen"], એસિડિટી: ["omeprazole"],
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -223,7 +224,7 @@ function analyse(symptoms, userMeds) {
     }
     return { med, matchCount: c, symptoms };
   }).filter((e) => e.matchCount > 0).sort((a, b) => b.matchCount - a.matchCount);
-  const matched   = scored.filter((e) => nm.some((u) => norm(e.med.name).includes(u) || u.includes(norm(e.med.name))));
+  const matched = scored.filter((e) => nm.some((u) => norm(e.med.name).includes(u) || u.includes(norm(e.med.name))));
   const suggested = scored.filter((e) => !matched.includes(e)).slice(0, 3);
   return { matched, suggested };
 }
@@ -318,8 +319,8 @@ const DosagePanel = memo(function DosagePanel({ medData, t }) {
   const [age, setAge] = useState("adults");
   const AGE = [
     { id: "children", Icon: RiParentLine, label: t.ageChildren },
-    { id: "adults",   Icon: RiUserLine,   label: t.ageAdults   },
-    { id: "elderly",  Icon: RiUser3Line,  label: t.ageElderly  },
+    { id: "adults", Icon: RiUserLine, label: t.ageAdults },
+    { id: "elderly", Icon: RiUser3Line, label: t.ageElderly },
   ];
   return (
     <div>
@@ -351,8 +352,8 @@ const DosagePanel = memo(function DosagePanel({ medData, t }) {
 // ─── ResultCard — individual medicine card ────────────────────────────────────
 const ResultCard = memo(function ResultCard({ entry, lang, t }) {
   const { med } = entry;
-  const data   = med[lang] || med.en;
-  const freq   = FREQ[lang]?.[med.id] || FREQ.en[med.id];
+  const data = med[lang] || med.en;
+  const freq = FREQ[lang]?.[med.id] || FREQ.en[med.id];
   const reason = getReason(med.id, entry.symptoms || [], lang);
 
   return (
@@ -457,11 +458,11 @@ const NoMatchCard = memo(function NoMatchCard({ t, onReset }) {
             onMouseLeave={(e) => { e.currentTarget.style.background = G_BG; }}>
             <RiArrowRightLine size={15} /> {t.tryAgain}
           </button>
-          <a href="/contact"
+          <Link to="/contact"
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[14px] font-semibold transition-colors duration-150"
             style={{ background: "rgba(255,255,255,0.9)", border: `1.5px solid ${BORDER_SOFT}`, color: "#475569" }}>
             <RiStethoscopeLine size={15} /> {t.consultDoctor}
-          </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -586,8 +587,8 @@ export default function Symptoms({ lang = "en" }) {
   const [symptoms, setSymptoms] = useState([]);
   const [userMeds, setUserMeds] = useState([]);
   const [analysed, setAnalysed] = useState(false);
-  const [result,   setResult]   = useState(null);
-  const [noMatch,  setNoMatch]  = useState(false);
+  const [result, setResult] = useState(null);
+  const [noMatch, setNoMatch] = useState(false);
 
   const hasResults = result && (result.matched.length > 0 || result.suggested.length > 0);
   const normSymptomsSet = useMemo(() => new Set(symptoms.map(norm)), [symptoms]);
@@ -722,10 +723,10 @@ export default function Symptoms({ lang = "en" }) {
                     !symptoms.length
                       ? { background: "rgba(203,232,218,0.30)", color: "#94a3b8" }
                       : {
-                          background: `linear-gradient(135deg,${G} 0%,${G_DIM} 100%)`,
-                          color: G_TEXT,
-                          boxShadow: "0 4px 24px rgba(30,227,148,0.42)",
-                        }
+                        background: `linear-gradient(135deg,${G} 0%,${G_DIM} 100%)`,
+                        color: G_TEXT,
+                        boxShadow: "0 4px 24px rgba(30,227,148,0.42)",
+                      }
                   }
                 >
                   <RiSearchEyeLine size={19} />

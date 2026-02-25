@@ -1,6 +1,7 @@
 // pages/About.jsx — Aura Health About page, theme-matched to Home.jsx
 
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import {
   RiCapsuleLine, RiVolumeUpLine, RiUser3Line,
@@ -11,13 +12,13 @@ import {
 } from "react-icons/ri";
 
 // ─── Theme — exact match to Home.jsx ──────────────────────────────────────────
-const GREEN        = "#1ee394";
-const GREEN_DIM    = "#17c97e";
-const GREEN_BG     = "rgba(30,227,148,0.12)";
+const GREEN = "#1ee394";
+const GREEN_DIM = "#17c97e";
+const GREEN_BG = "rgba(30,227,148,0.12)";
 const GREEN_BORDER = "rgba(30,227,148,0.35)";
 
 // Glass styles — same as Home.jsx
-const glass       = "bg-white/70 backdrop-blur-2xl border border-white/90 shadow-sm";
+const glass = "bg-white/70 backdrop-blur-2xl border border-white/90 shadow-sm";
 const glassMedium = "bg-white/55 backdrop-blur-xl border border-white/75 shadow-sm";
 
 // ─── Content ──────────────────────────────────────────────────────────────────
@@ -33,40 +34,40 @@ const content = {
     problemTitle: "Why medicine info is broken",
     problemSub: "People deserve simple, reliable answers. Today, they rarely get them.",
     problems: [
-      { icon: RiAlertLine,      title: "Confusing leaflets",   desc: "Medical package inserts are written for professionals, not patients. Dense text, jargon, and tiny print." },
-      { icon: RiSearchLine,     title: "Google overload",      desc: "Searching a medicine name returns clinical trials, forums, and conflicting advice — not a clear answer." },
-      { icon: RiTimeLine,       title: "No structured format", desc: "AI chatbots give different answers depending on how you ask. There's no consistent, predictable output." },
+      { icon: RiAlertLine, title: "Confusing leaflets", desc: "Medical package inserts are written for professionals, not patients. Dense text, jargon, and tiny print." },
+      { icon: RiSearchLine, title: "Google overload", desc: "Searching a medicine name returns clinical trials, forums, and conflicting advice — not a clear answer." },
+      { icon: RiTimeLine, title: "No structured format", desc: "AI chatbots give different answers depending on how you ask. There's no consistent, predictable output." },
     ],
 
     solutionLabel: "Our Solution",
     solutionTitle: "Focused. Structured. Instant.",
     solutionSub: "Aura Health is built only for medicines. One input, one structured result — every time.",
     features: [
-      { icon: RiCapsuleLine,    title: "Plain-language explanations", desc: "No medical jargon. What the medicine does, in words anyone can understand." },
-      { icon: RiParentLine,     title: "Age-wise dosage breakdown",   desc: "The right amount for Children, Adults, or Elderly — shown clearly in one tap." },
-      { icon: RiVolumeUpLine,   title: "One-click audio",             desc: "Tap Listen and hear a clear spoken explanation — built for accessibility from day one." },
-      { icon: RiShieldCheckLine,title: "Important warnings",          desc: "Key safety information shown upfront — not buried in a wall of text." },
-      { icon: RiFlashlightLine, title: "Instant results",             desc: "No long prompts. No conversation. Type the name, get the answer." },
-      { icon: RiStethoscopeLine,title: "Symptom checker",             desc: "Describe what you feel and get matched to relevant OTC medicines with dosage guides." },
+      { icon: RiCapsuleLine, title: "Plain-language explanations", desc: "No medical jargon. What the medicine does, in words anyone can understand." },
+      { icon: RiParentLine, title: "Age-wise dosage breakdown", desc: "The right amount for Children, Adults, or Elderly — shown clearly in one tap." },
+      { icon: RiVolumeUpLine, title: "One-click audio", desc: "Tap Listen and hear a clear spoken explanation — built for accessibility from day one." },
+      { icon: RiShieldCheckLine, title: "Important warnings", desc: "Key safety information shown upfront — not buried in a wall of text." },
+      { icon: RiFlashlightLine, title: "Instant results", desc: "No long prompts. No conversation. Type the name, get the answer." },
+      { icon: RiStethoscopeLine, title: "Symptom checker", desc: "Describe what you feel and get matched to relevant OTC medicines with dosage guides." },
     ],
 
     whyLabel: "Why not ChatGPT?",
     whyTitle: "Built specifically for medicines",
     whySub: "General AI tools are powerful — but Aura Health is purpose-built for this one job.",
     comparisons: [
-      { label: "Focused experience",    aura: "Built only for medicines — zero distractions", gpt: "General-purpose, requires specific prompting" },
-      { label: "Consistent format",     aura: "Same structured output every time",             gpt: "Varies based on how you phrase the question" },
-      { label: "Non-tech users",        aura: "Type name → get answer, no prompts needed",     gpt: "Requires knowing how to ask medical questions" },
-      { label: "Accessibility",         aura: "Built-in one-click audio for all users",         gpt: "No dedicated audio for spoken results" },
+      { label: "Focused experience", aura: "Built only for medicines — zero distractions", gpt: "General-purpose, requires specific prompting" },
+      { label: "Consistent format", aura: "Same structured output every time", gpt: "Varies based on how you phrase the question" },
+      { label: "Non-tech users", aura: "Type name → get answer, no prompts needed", gpt: "Requires knowing how to ask medical questions" },
+      { label: "Accessibility", aura: "Built-in one-click audio for all users", gpt: "No dedicated audio for spoken results" },
     ],
 
     howLabel: "How it works",
     howTitle: "Three steps. Zero confusion.",
     howSub: "You should never need instructions to use Aura Health.",
     steps: [
-      { icon: RiSearchLine,    title: "Type the medicine name",  desc: "Enter any medicine name — brand names work too. Start typing and suggestions appear." },
-      { icon: RiBookOpenLine,  title: "Read the clear summary",  desc: "See what it does, dosage by age, and important warnings — all in one clean view." },
-      { icon: RiVolumeUpLine,  title: "Listen if you prefer",    desc: "Tap Listen for a spoken explanation — ideal for elderly users or low-literacy scenarios." },
+      { icon: RiSearchLine, title: "Type the medicine name", desc: "Enter any medicine name — brand names work too. Start typing and suggestions appear." },
+      { icon: RiBookOpenLine, title: "Read the clear summary", desc: "See what it does, dosage by age, and important warnings — all in one clean view." },
+      { icon: RiVolumeUpLine, title: "Listen if you prefer", desc: "Tap Listen for a spoken explanation — ideal for elderly users or low-literacy scenarios." },
     ],
 
     ctaTitle: "Clarity is a right, not a privilege.",
@@ -76,8 +77,8 @@ const content = {
     scopeLabel: "Hackathon MVP scope",
     scopeTitle: "What's in — and what's next",
     scopeSub: "This is a focused prototype. We built what matters most, not everything.",
-    inScope:   ["Medicine name search", "Pre-filled medicine database", "Age-wise dosage", "Warnings section", "English audio (TTS)", "Symptom checker", "Multilingual UI (EN / HI / GU)"],
-    outScope:  ["OCR / image scanning", "Pharmacy suggestions", "Full global database", "Login / accounts", "Prescription analysis"],
+    inScope: ["Medicine name search", "Pre-filled medicine database", "Age-wise dosage", "Warnings section", "English audio (TTS)", "Symptom checker", "Multilingual UI (EN / HI / GU)"],
+    outScope: ["OCR / image scanning", "Pharmacy suggestions", "Full global database", "Login / accounts", "Prescription analysis"],
   },
   hi: {
     pageLabel: "Aura Health के बारे में",
@@ -90,40 +91,40 @@ const content = {
     problemTitle: "दवा की जानकारी क्यों मुश्किल है",
     problemSub: "लोग सरल जवाब के हकदार हैं। आज वो मिलता नहीं।",
     problems: [
-      { icon: RiAlertLine,  title: "उलझी हुई पर्ची",       desc: "दवाइयों की पर्चियां डॉक्टरों के लिए लिखी होती हैं, मरीज़ों के लिए नहीं।" },
-      { icon: RiSearchLine, title: "गूगल पर बहुत कुछ",     desc: "दवा का नाम गूगल करने पर क्लिनिकल आर्टिकल, फोरम — स्पष्ट जवाब नहीं।" },
-      { icon: RiTimeLine,   title: "कोई तय जानकारी नहीं", desc: "AI चैटबॉट्स हर बार अलग जवाब देते हैं — कोई तय फॉर्मेट नहीं।" },
+      { icon: RiAlertLine, title: "उलझी हुई पर्ची", desc: "दवाइयों की पर्चियां डॉक्टरों के लिए लिखी होती हैं, मरीज़ों के लिए नहीं।" },
+      { icon: RiSearchLine, title: "गूगल पर बहुत कुछ", desc: "दवा का नाम गूगल करने पर क्लिनिकल आर्टिकल, फोरम — स्पष्ट जवाब नहीं।" },
+      { icon: RiTimeLine, title: "कोई तय जानकारी नहीं", desc: "AI चैटबॉट्स हर बार अलग जवाब देते हैं — कोई तय फॉर्मेट नहीं।" },
     ],
 
     solutionLabel: "हमारा समाधान",
     solutionTitle: "केंद्रित। संरचित। तुरंत।",
     solutionSub: "Aura Health सिर्फ दवाइयों के लिए बना है। एक इनपुट, एक स्पष्ट जवाब — हर बार।",
     features: [
-      { icon: RiCapsuleLine,    title: "आसान भाषा में जानकारी",  desc: "कोई मेडिकल शब्द नहीं। दवा क्या करती है — सरल शब्दों में।" },
-      { icon: RiParentLine,     title: "उम्र के अनुसार खुराक",  desc: "बच्चे, बड़े या बुजुर्ग — एक टैप में सही मात्रा।" },
-      { icon: RiVolumeUpLine,   title: "एक क्लिक में ऑडियो",    desc: "सुनें दबाएं और दवा की जानकारी सुनें।" },
-      { icon: RiShieldCheckLine,title: "जरूरी सावधानियां",       desc: "महत्वपूर्ण चेतावनियां सबसे पहले दिखाई जाती हैं।" },
-      { icon: RiFlashlightLine, title: "तुरंत परिणाम",           desc: "नाम लिखें, जवाब पाएं — कोई लंबी बातचीत नहीं।" },
-      { icon: RiStethoscopeLine,title: "लक्षण जांचकर्ता",       desc: "लक्षण बताएं और सही OTC दवाएं सुझाव पाएं।" },
+      { icon: RiCapsuleLine, title: "आसान भाषा में जानकारी", desc: "कोई मेडिकल शब्द नहीं। दवा क्या करती है — सरल शब्दों में।" },
+      { icon: RiParentLine, title: "उम्र के अनुसार खुराक", desc: "बच्चे, बड़े या बुजुर्ग — एक टैप में सही मात्रा।" },
+      { icon: RiVolumeUpLine, title: "एक क्लिक में ऑडियो", desc: "सुनें दबाएं और दवा की जानकारी सुनें।" },
+      { icon: RiShieldCheckLine, title: "जरूरी सावधानियां", desc: "महत्वपूर्ण चेतावनियां सबसे पहले दिखाई जाती हैं।" },
+      { icon: RiFlashlightLine, title: "तुरंत परिणाम", desc: "नाम लिखें, जवाब पाएं — कोई लंबी बातचीत नहीं।" },
+      { icon: RiStethoscopeLine, title: "लक्षण जांचकर्ता", desc: "लक्षण बताएं और सही OTC दवाएं सुझाव पाएं।" },
     ],
 
     whyLabel: "ChatGPT क्यों नहीं?",
     whyTitle: "दवाइयों के लिए खास बनाया",
     whySub: "AI उपकरण शक्तिशाली हैं — लेकिन Aura Health इसी एक काम के लिए बना है।",
     comparisons: [
-      { label: "केंद्रित अनुभव",  aura: "सिर्फ दवाइयों के लिए — कोई विकर्षण नहीं", gpt: "सामान्य उपकरण, विशेष प्रॉम्प्ट चाहिए" },
-      { label: "एक जैसा फॉर्मेट", aura: "हर बार एक जैसा जवाब",                      gpt: "सवाल के तरीके पर निर्भर" },
-      { label: "आसान उपयोग",      aura: "नाम लिखें → जवाब पाएं",                    gpt: "सही सवाल पूछना जरूरी" },
-      { label: "सुलभता",           aura: "बिल्ट-इन ऑडियो",                           gpt: "ऑडियो सुविधा नहीं" },
+      { label: "केंद्रित अनुभव", aura: "सिर्फ दवाइयों के लिए — कोई विकर्षण नहीं", gpt: "सामान्य उपकरण, विशेष प्रॉम्प्ट चाहिए" },
+      { label: "एक जैसा फॉर्मेट", aura: "हर बार एक जैसा जवाब", gpt: "सवाल के तरीके पर निर्भर" },
+      { label: "आसान उपयोग", aura: "नाम लिखें → जवाब पाएं", gpt: "सही सवाल पूछना जरूरी" },
+      { label: "सुलभता", aura: "बिल्ट-इन ऑडियो", gpt: "ऑडियो सुविधा नहीं" },
     ],
 
     howLabel: "कैसे करें",
     howTitle: "तीन कदम। कोई उलझन नहीं।",
     howSub: "Aura Health इस्तेमाल करने के लिए कोई निर्देश नहीं चाहिए।",
     steps: [
-      { icon: RiSearchLine,   title: "दवा का नाम लिखें",   desc: "कोई भी दवा का नाम लिखें — ब्रांड नाम भी चलेगा।" },
+      { icon: RiSearchLine, title: "दवा का नाम लिखें", desc: "कोई भी दवा का नाम लिखें — ब्रांड नाम भी चलेगा।" },
       { icon: RiBookOpenLine, title: "आसान जानकारी पढ़ें", desc: "क्या करती है, मात्रा और सावधानियां।" },
-      { icon: RiVolumeUpLine, title: "सुनना हो तो सुनें",  desc: "सुनें बटन दबाकर जानकारी सुन सकते हैं।" },
+      { icon: RiVolumeUpLine, title: "सुनना हो तो सुनें", desc: "सुनें बटन दबाकर जानकारी सुन सकते हैं।" },
     ],
 
     ctaTitle: "समझना हर इंसान का हक है।",
@@ -133,8 +134,8 @@ const content = {
     scopeLabel: "हैकाथॉन MVP",
     scopeTitle: "क्या है — और क्या आगे",
     scopeSub: "यह एक केंद्रित प्रोटोटाइप है।",
-    inScope:   ["दवा नाम खोज", "दवाओं का डेटाबेस", "उम्र के अनुसार खुराक", "सावधानियां", "ऑडियो (TTS)", "लक्षण जांचकर्ता", "बहुभाषी UI"],
-    outScope:  ["OCR / इमेज स्कैन", "फार्मेसी सुझाव", "ग्लोबल डेटाबेस", "लॉगिन/अकाउंट", "प्रिस्क्रिप्शन विश्लेषण"],
+    inScope: ["दवा नाम खोज", "दवाओं का डेटाबेस", "उम्र के अनुसार खुराक", "सावधानियां", "ऑडियो (TTS)", "लक्षण जांचकर्ता", "बहुभाषी UI"],
+    outScope: ["OCR / इमेज स्कैन", "फार्मेसी सुझाव", "ग्लोबल डेटाबेस", "लॉगिन/अकाउंट", "प्रिस्क्रिप्शन विश्लेषण"],
   },
   gu: {
     pageLabel: "Aura Health વિષે",
@@ -147,39 +148,39 @@ const content = {
     problemTitle: "દવાની માહિતી કેમ અઘરી છે",
     problemSub: "લોકો સ્પષ્ટ જવાબના હકદાર છે. આજે તે મળતો નથી.",
     problems: [
-      { icon: RiAlertLine,  title: "ગૂંચવણભરી પર્ચી",   desc: "દવાઓની પેટી-ચિઠ્ઠીઓ ડૉક્ટરો માટે છે, દર્દીઓ માટે નહીં." },
-      { icon: RiSearchLine, title: "ગૂગલ પર ઘણું",      desc: "દવાનું નામ ગૂગલ કરવાથી ક્લિનિકલ ટ્રાયલ અને ફોરમ મળે — સ્પષ્ટ જવાબ નહીં." },
-      { icon: RiTimeLine,   title: "કોઈ ચોક્કસ ફોર્મેટ નહીં", desc: "AI ચૅટ ટૂલ્સ દર વખતે અલગ જવાબ આપે છે." },
+      { icon: RiAlertLine, title: "ગૂંચવણભરી પર્ચી", desc: "દવાઓની પેટી-ચિઠ્ઠીઓ ડૉક્ટરો માટે છે, દર્દીઓ માટે નહીં." },
+      { icon: RiSearchLine, title: "ગૂગલ પર ઘણું", desc: "દવાનું નામ ગૂગલ કરવાથી ક્લિનિકલ ટ્રાયલ અને ફોરમ મળે — સ્પષ્ટ જવાબ નહીં." },
+      { icon: RiTimeLine, title: "કોઈ ચોક્કસ ફોર્મેટ નહીં", desc: "AI ચૅટ ટૂલ્સ દર વખતે અલગ જવાબ આપે છે." },
     ],
 
     solutionLabel: "અમારો ઉકેલ",
     solutionTitle: "કેન્દ્રિત. માળખાગત. તાત્કાળ.",
     solutionSub: "Aura Health ફક્ત દવાઓ માટે બનાવ્યું છે. એક ઇનપુટ, એક સ્પષ્ટ જવાબ.",
     features: [
-      { icon: RiCapsuleLine,    title: "સરળ ભાષામાં માહિતી",    desc: "કોઈ મેડિકલ શબ્દ નહીં. દવા શું કરે — સ્પષ્ટ ભાષામાં." },
-      { icon: RiParentLine,     title: "ઉંમર પ્રમાણે ડોઝ",     desc: "બાળકો, મોટા કે વૃદ્ધ — એક ટૅપમાં સાચી માત્રા." },
-      { icon: RiVolumeUpLine,   title: "એક ક્લિકમાં ઓડિઓ",     desc: "સાંભળો દબાઓ અને માહિતી સાંભળો." },
-      { icon: RiShieldCheckLine,title: "મહત્વની ચેતવણીઓ",      desc: "જરૂરી સલામતી માહિતી સૌ પ્રથમ." },
-      { icon: RiFlashlightLine, title: "તાત્કાળ પરિણામ",        desc: "નામ ટાઇપ કરો, જવાબ મળો — કોઈ લાંબી વાતચીત નહીં." },
-      { icon: RiStethoscopeLine,title: "લક્ષણ તપાસ",            desc: "લક્ષણ જણાવો અને OTC દવા સૂચન મેળવો." },
+      { icon: RiCapsuleLine, title: "સરળ ભાષામાં માહિતી", desc: "કોઈ મેડિકલ શબ્દ નહીં. દવા શું કરે — સ્પષ્ટ ભાષામાં." },
+      { icon: RiParentLine, title: "ઉંમર પ્રમાણે ડોઝ", desc: "બાળકો, મોટા કે વૃદ્ધ — એક ટૅપમાં સાચી માત્રા." },
+      { icon: RiVolumeUpLine, title: "એક ક્લિકમાં ઓડિઓ", desc: "સાંભળો દબાઓ અને માહિતી સાંભળો." },
+      { icon: RiShieldCheckLine, title: "મહત્વની ચેતવણીઓ", desc: "જરૂરી સલામતી માહિતી સૌ પ્રથમ." },
+      { icon: RiFlashlightLine, title: "તાત્કાળ પરિણામ", desc: "નામ ટાઇપ કરો, જવાબ મળો — કોઈ લાંબી વાતચીત નહીં." },
+      { icon: RiStethoscopeLine, title: "લક્ષણ તપાસ", desc: "લક્ષણ જણાવો અને OTC દવા સૂચન મેળવો." },
     ],
 
     whyLabel: "ChatGPT કેમ નહીં?",
     whyTitle: "ખાસ દવાઓ માટે બનાવ્યું",
     whySub: "AI ટૂલ્સ શક્તિશાળી છે — પણ Aura Health આ એક કામ માટે બનાવ્યું છે.",
     comparisons: [
-      { label: "કેન્દ્રિત અનુભવ",    aura: "ફક્ત દવાઓ માટે — કોઈ વિક્ષેપ નહીં",      gpt: "સામાન્ય ઉપકરણ, ખાસ prompt જોઈએ" },
-      { label: "સ્થિર ફોર્મેટ",       aura: "દર વખતે એક જ માળખાગત જવાબ",             gpt: "સવાલ કઈ રીતે પૂછ્યો તેના પર આધાર" },
-      { label: "સરળ ઉપયોગ",           aura: "નામ ટાઇપ → જવાબ, prompt ની જરૂર નહીં", gpt: "સ્વાસ્થ્ય પ્રશ્નો કેવી રીતે પૂછવા તે જાણવું પડે" },
-      { label: "સુલભતા",              aura: "બિલ્ટ-ઇન ઓડિઓ",                          gpt: "ઓડિઓ સુવિધા નથી" },
+      { label: "કેન્દ્રિત અનુભવ", aura: "ફક્ત દવાઓ માટે — કોઈ વિક્ષેપ નહીં", gpt: "સામાન્ય ઉપકરણ, ખાસ prompt જોઈએ" },
+      { label: "સ્થિર ફોર્મેટ", aura: "દર વખતે એક જ માળખાગત જવાબ", gpt: "સવાલ કઈ રીતે પૂછ્યો તેના પર આધાર" },
+      { label: "સરળ ઉપયોગ", aura: "નામ ટાઇપ → જવાબ, prompt ની જરૂર નહીં", gpt: "સ્વાસ્થ્ય પ્રશ્નો કેવી રીતે પૂછવા તે જાણવું પડે" },
+      { label: "સુલભતા", aura: "બિલ્ટ-ઇન ઓડિઓ", gpt: "ઓડિઓ સુવિધા નથી" },
     ],
 
     howLabel: "કઈ રીતે",
     howTitle: "ત્રણ પગલા. કોઈ મૂઝવણ નહીં.",
     howSub: "Aura Health વાપરવા માટે કોઈ સૂચના જોઈતી નથી.",
     steps: [
-      { icon: RiSearchLine,   title: "દવાનું નામ ટાઇપ કરો",   desc: "કોઈ પણ દવાનું નામ — બ્રાન્ડ નામ પણ ચાલે." },
-      { icon: RiBookOpenLine, title: "સ્પષ્ટ સારાંશ વાંચો",    desc: "શું કરે, ઉંમર પ્રમાણે ડોઝ, અને ચેતવણીઓ." },
+      { icon: RiSearchLine, title: "દવાનું નામ ટાઇપ કરો", desc: "કોઈ પણ દવાનું નામ — બ્રાન્ડ નામ પણ ચાલે." },
+      { icon: RiBookOpenLine, title: "સ્પષ્ટ સારાંશ વાંચો", desc: "શું કરે, ઉંમર પ્રમાણે ડોઝ, અને ચેતવણીઓ." },
       { icon: RiVolumeUpLine, title: "સાંભળવું હોય તો સાંભળો", desc: "સાંભળો દબાવો — ઓડિઓ સ્પષ્ટીકરણ." },
     ],
 
@@ -190,8 +191,8 @@ const content = {
     scopeLabel: "હૅકેથૉન MVP",
     scopeTitle: "શું છે — અને આગળ શું",
     scopeSub: "આ એક કેન્દ્રિત પ્રોટોટાઇપ છે.",
-    inScope:   ["દવા નામ શોધ", "દવાઓનો ડેટાબેઝ", "ઉંમર પ્રમાણે ડોઝ", "ચેતવણીઓ", "ઓડિઓ (TTS)", "લક્ષણ તપાસ", "બહુભાષી UI"],
-    outScope:  ["OCR / ઇમેજ સ્કૅન", "ફાર્મસી સૂચન", "ગ્લોબલ ડેટાબેઝ", "લૉગિન/એકાઉન્ટ", "પ્રિસ્ક્રિપ્શન વિશ્લેષણ"],
+    inScope: ["દવા નામ શોધ", "દવાઓનો ડેટાબેઝ", "ઉંમર પ્રમાણે ડોઝ", "ચેતવણીઓ", "ઓડિઓ (TTS)", "લક્ષણ તપાસ", "બહુભાષી UI"],
+    outScope: ["OCR / ઇમેજ સ્કૅન", "ફાર્મસી સૂચન", "ગ્લોબલ ડેટાબેઝ", "લૉગિન/એકાઉન્ટ", "પ્રિસ્ક્રિપ્શન વિશ્લેષણ"],
   },
 };
 
@@ -466,18 +467,22 @@ export default function About({ lang = "en" }) {
             <p className="text-slate-500 text-lg sm:text-xl leading-relaxed max-w-md mx-auto mb-10 font-light">
               {t.ctaSub}
             </p>
-            <motion.a
-              href="/"
+            <motion.div
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
-              className="inline-flex items-center gap-2.5 font-bold text-lg px-10 py-5 rounded-2xl shadow-lg transition-colors duration-200 focus:outline-none"
-              style={{ backgroundColor: GREEN, color: "#054d34" }}
-              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = GREEN_DIM; }}
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = GREEN; }}
+              className="inline-flex"
             >
-              <RiSearchLine size={18} />
-              {t.ctaBtn}
-            </motion.a>
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2.5 font-bold text-lg px-10 py-5 rounded-2xl shadow-lg transition-colors duration-200 focus:outline-none"
+                style={{ backgroundColor: GREEN, color: "#054d34" }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = GREEN_DIM; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = GREEN; }}
+              >
+                <RiSearchLine size={18} />
+                {t.ctaBtn}
+              </Link>
+            </motion.div>
           </div>
         </FadeIn>
 

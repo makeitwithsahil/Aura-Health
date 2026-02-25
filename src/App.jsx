@@ -1,23 +1,16 @@
-import { useState } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
-import {
-  RiHeartPulseLine,
-  RiTranslate2,
-  RiMenuLine,
-  RiCloseLine,
-  RiGithubLine,
-} from "react-icons/ri";
+import { useState, lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
 
-import Home     from "./pages/Home";
-import About    from "./pages/About";
-import Symptoms from "./pages/Symptoms";
-import Contact  from "./pages/Contact";
-import Navbar   from "./components/layout/Navbar";
-import Footer   from "./components/layout/Footer";
+// ─── Lazy-loaded pages (each page's JS only downloads when first visited) ──────
+const Home = lazy(() => import("./pages/Home"));
+const About = lazy(() => import("./pages/About"));
+const Symptoms = lazy(() => import("./pages/Symptoms"));
+const Contact = lazy(() => import("./pages/Contact"));
 
 // ─── Page wrapper with shared background ─────────────────────────────────────
-function PageWrapper({ lang, children }) {
+function PageWrapper({ children }) {
   return (
     <div
       className="min-h-screen flex flex-col text-slate-800"
@@ -40,17 +33,19 @@ function AppShell() {
   const [lang, setLang] = useState("en");
 
   return (
-    <PageWrapper lang={lang}>
+    <PageWrapper>
       <Navbar lang={lang} onLangChange={setLang} />
 
-      {/* Page content — pass lang down as prop */}
+      {/* Suspense: shell (navbar + footer) is always visible; page content fades in */}
       <main className="flex-1">
-        <Routes>
-          <Route path="/"         element={<Home     lang={lang} />} />
-          <Route path="/about"    element={<About    lang={lang} />} />
-          <Route path="/symptoms" element={<Symptoms lang={lang} />} />
-          <Route path="/contact"  element={<Contact  lang={lang} />} />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="/" element={<Home lang={lang} />} />
+            <Route path="/about" element={<About lang={lang} />} />
+            <Route path="/symptoms" element={<Symptoms lang={lang} />} />
+            <Route path="/contact" element={<Contact lang={lang} />} />
+          </Routes>
+        </Suspense>
       </main>
 
       <Footer lang={lang} />

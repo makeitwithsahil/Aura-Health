@@ -1,17 +1,19 @@
 // components/layout/Footer.jsx — light green theme matching Home.jsx
 
+import { memo } from "react";
+import { Link } from "react-router-dom";
 import { RiHeartPulseLine, RiGithubLine } from "react-icons/ri";
 
 const GREEN = "#1ee394";
 
-export default function Footer() {
+export default memo(function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer role="contentinfo" className="py-10 px-4">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Brand */}
-        <a href="/" className="flex items-center gap-2.5 group">
+        <Link to="/" className="flex items-center gap-2.5 group">
           <span
             className="w-9 h-9 rounded-lg flex items-center justify-center shadow transition-opacity group-hover:opacity-80"
             style={{ backgroundColor: GREEN }}
@@ -20,7 +22,7 @@ export default function Footer() {
           </span>
           <span className="text-base font-bold text-slate-600">Aura Health</span>
           <span className="text-sm text-slate-400">&copy; {year}</span>
-        </a>
+        </Link>
 
         {/* Disclaimer */}
         <p className="text-sm text-slate-400 text-center max-w-sm leading-relaxed">
@@ -43,4 +45,4 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+});
